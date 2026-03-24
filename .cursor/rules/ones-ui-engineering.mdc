@@ -1,0 +1,24 @@
+---
+description: 对标 ones 的 UI 保真与工程化一致性（硬性必达）
+globs: frontend/src/**/* 
+alwaysApply: true
+---
+
+# 对标 ones 的 UI 保真（前端）
+
+> 基准：`web-prototype/*` 与 `web-prototype/styles/common.css`（优先复用其 class/结构/间距/圆角）
+
+- 任何“页面/三栏布局/树/右侧 TOC”能力的实现，必须至少做到：
+  - 三栏容器：使用 `sidebar`（左）、`content-area`（中）、`rightbar`（右）的结构语义
+  - 宽度与层级：左 260px、右 240px；顶部区域与边框层级尽量与原型一致
+  - 中栏：必须包含 `content-toolbar`（breadcrumb + actions），即使 actions 仍是占位也不得缺失 DOM
+  - 右侧：必须包含 `rightbar-section`，并提供 `toc` 区域（可先占位但 DOM/class 必须存在）
+- 树控件：树节点 DOM 必须使用 `tree-node`（选中 active 态、层级缩进使用原型对应的 `tree-children` 或等价容器完成）。
+- 组件样式：优先使用 `.btn-primary` / `.btn-secondary` / `.btn-ghost` 等统一类；新增关键样式时优先补充 CSS/Token，而不是在 TSX 内大量行内 style“绕开”原型。
+- 允许例外：仅当“原型确实缺失该能力”或“明确影响可访问性/兼容性”时，例外需要在 PR/提交说明里标注原因。
+
+# 工程化一致性（前端）
+
+- 把 Space/Doc Shell 拆成可复用组件（至少拆：`SpaceSidebar`、`ContentToolbar`、`DocReadView/EditView`、`Rightbar`、`PageTree`）。
+- 单文件不要堆叠过多 UI/状态逻辑；优先把“数据请求（React Query）”与“展示/交互（组件）”分离。
+- 任何 401/403/409 等错误必须统一进入同一个错误展示路径（不要各页面各自写文案和样式），确保权限体验一致。

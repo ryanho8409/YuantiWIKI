@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Space management - Yuanti Wiki</title>
+  <link rel="stylesheet" href="styles/common.css">
+  <style>
+    .main-wrap {
+      padding: 24px 24px 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .page-sub {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 20px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: #f9fafb;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+      background: #f9fafb;
+    }
+    .tag-default {
+      background: #eff6ff;
+      border-color: #2563eb;
+      color: #1d4ed8;
+    }
+    .meta-hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header" style="position: static;">
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="Yuanti Wiki">
+      <span>Yuanti Wiki</span>
+    </a>
+    <div class="nav">
+      <a href="admin-spaces.html" class="btn btn-ghost">Spaces</a>
+      <a href="user-management.html" class="btn btn-ghost">Users</a>
+      <span class="user">System admin</span>
+    </div>
+  </header>
+  <main class="main-wrap">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Space management</h1>
+        <p class="page-sub">System admin creates and maintains spaces here.</p>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary">New space (prototype)</button>
+      </div>
+    </div>
+    <section class="card">
+      <div class="card-header">
+        <span>Spaces</span>
+        <span class="meta-hint">This is a prototype-only list. In real system it comes from /api/v1/spaces.</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Space</th>
+            <th>Description</th>
+            <th>Icon</th>
+            <th>Created by</th>
+            <th>Updated at</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Product docs <span class="tag tag-default">Default</span></td>
+            <td>Requirements, PRDs and feature specs.</td>
+            <td>📘</td>
+            <td>admin</td>
+            <td>2025-03-15</td>
+          </tr>
+          <tr>
+            <td>Tech guidelines</td>
+            <td>Development standards and API contracts.</td>
+            <td>🧪</td>
+            <td>alex</td>
+            <td>2025-03-14</td>
+          </tr>
+          <tr>
+            <td>Ops handbook</td>
+            <td>Deployment, incident handling and operations.</td>
+            <td>⚙️</td>
+            <td>lee</td>
+            <td>2025-03-10</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home dashboard - Yuanti Wiki</title>
+  <link rel="stylesheet" href="styles/common.css">
+  <style>
+    .dashboard-wrap {
+      padding: calc(52px + 16px) 24px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .dash-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .dash-sub {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .dash-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1.4fr;
+      gap: 20px;
+    }
+    .dash-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      padding: 16px 18px 18px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .card-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .stats-row {
+      display: flex;
+      gap: 12px;
+    }
+    .stat-pill {
+      flex: 1;
+      background: #f3f4ff;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .stat-pill span:first-child {
+      color: #6b7280;
+    }
+    .stat-pill strong {
+      font-size: 14px;
+    }
+    .space-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .space-card {
+      background:#ffffff;
+      border:1px solid #e5e7eb;
+      border-radius:10px;
+      padding:18px;
+      text-decoration:none;
+      color:#111827;
+    }
+    .space-card .icon {
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      background:#e0ebff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:8px;
+    }
+    .space-card h3 { margin:0 0 4px; font-size:15px; }
+    .space-card .desc { margin:0 0 8px; font-size:12px; color:#6b7280; }
+    .space-card .meta { font-size:11px; color:#6b7280; }
+    .list { margin:0; padding:0; list-style:none; }
+    .list-item { padding:8px 0; border-bottom:1px solid #e5e7eb; font-size:13px; display:flex; justify-content:space-between; gap:8px; }
+    .list-item-main { flex:1; min-width:0; }
+    .list-item-title { margin:0 0 2px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .list-item-meta { font-size:11px; color:#6b7280; }
+    .list-item-time { font-size:11px; color:#6b7280; white-space:nowrap; }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="Yuanti Wiki">
+      <span>Yuanti Wiki</span>
+    </a>
+    <div class="nav">
+      <input type="search" placeholder="Search docs..." onclick="location.href='search.html'">
+      <a href="user-management.html" class="btn btn-ghost">User management</a>
+      <span class="user">demo</span>
+    </div>
+  </header>
+  <main class="dashboard-wrap">
+    <div class="dash-header">
+      <div>
+        <h1 class="dash-title">Welcome back, demo</h1>
+        <p class="dash-sub">Quick overview of your spaces and docs.</p>
+      </div>
+      <div class="dash-actions">
+        <a href="space.html" class="btn btn-primary">Go to Product docs space</a>
+        <button type="button" class="btn btn-secondary" onclick="location.href='search.html'">Search docs</button>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-col">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Spaces overview</div>
+              <div class="card-sub">Spaces you have access to</div>
+            </div>
+          </div>
+          <div class="stats-row" style="margin-bottom:12px;">
+            <div class="stat-pill"><span>Total spaces</span><strong>3</strong></div>
+            <div class="stat-pill"><span>Total docs</span><strong>128</strong></div>
+            <div class="stat-pill"><span>Edits (7 days)</span><strong>24</strong></div>
+          </div>
+          <div class="space-grid">
+            <a href="space.html" class="space-card">
+              <div class="icon">??</div>
+              <h3>Product docs</h3>
+              <p class="desc">Requirements, PRDs and feature specs.</p>
+              <p class="meta">Updated on 2025-03-15</p>
+            </a>
+            <a href="space.html" class="space-card">
+              <div class="icon">??</div>
+              <h3>Tech guidelines</h3>
+              <p class="desc">Development standards and API contracts.</p>
+              <p class="meta">Updated on 2025-03-14</p>
+            </a>
+            <a href="space.html" class="space-card">
+              <div class="icon">??</div>
+              <h3>Ops handbook</h3>
+              <p class="desc">Deployment, incident handling and operations.</p>
+              <p class="meta">Updated on 2025-03-10</p>
+            </a>
+          </div>
+        </section>
+      </div>
+      <div class="dash-col">
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recently viewed</div>
+              <div class="card-sub">Quickly jump back to docs</div>
+            </div>
+          </div>
+          <ul class="list">
+            <li class="list-item">
+              <div class="list-item-main">
+                <p class="list-item-title">Product requirement doc guideline</p>
+                <p class="list-item-meta">Product docs / Guideline</p>
+              </div>
+              <span class="list-item-time">Today</span>
+            </li>
+            <li class="list-item">
+              <div class="list-item-main">
+                <p class="list-item-title">PRD template</p>
+                <p class="list-item-meta">Product docs / Template</p>
+              </div>
+              <span class="list-item-time">Yesterday</span>
+            </li>
+          </ul>
+        </section>
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recent changes</div>
+              <div class="card-sub">Docs recently edited</div>
+            </div>
+          </div>
+          <ul class="list">
+            <li class="list-item">
+              <div class="list-item-main">
+                <p class="list-item-title">Release flow and rollback plan</p>
+                <p class="list-item-meta">Ops handbook ? updated by Lee</p>
+              </div>
+              <span class="list-item-time">3 hours ago</span>
+            </li>
+            <li class="list-item">
+              <div class="list-item-main">
+                <p class="list-item-title">Login & registration decision</p>
+                <p class="list-item-meta">Product docs ? updated by Zhang</p>
+              </div>
+              <span class="list-item-time">Yesterday</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

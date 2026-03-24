@@ -1,0 +1,361 @@
+/* Yuanti Wiki static prototype - shared styles */
+:root {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --sidebar-width: 260px;
+  --rightbar-width: 240px;
+  --header-height: 52px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  background: rgba(0,0,0,0.04);
+  color: var(--color-text);
+}
+
+/* Inputs & selects */
+input[type="text"],
+input[type="password"],
+input[type="search"],
+select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+select:focus {
+  border-color: var(--color-primary);
+}
+
+/* Header */
+.app-header {
+  height: var(--header-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.app-header .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.app-header .logo img {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.app-header .nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-header .nav input[type="search"] {
+  width: 220px;
+}
+
+.app-header .user {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.main-wrap,
+.dashboard-wrap {
+  padding-top: calc(var(--header-height) + 16px);
+}
+
+/* Tree */
+.tree-node {
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tree-node:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.tree-node.active {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--color-primary);
+}
+
+.tree-node .icon {
+  width: 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.tree-children {
+  padding-left: 18px;
+}
+/* 元体知识库 - 保真原型 共用样式 */
+:root {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --sidebar-width: 260px;
+  --rightbar-width: 240px;
+  --header-height: 52px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.btn-ghost:hover {
+  background: rgba(0,0,0,0.04);
+  color: var(--color-text);
+}
+
+/* 表单 */
+input[type="text"],
+input[type="password"],
+input[type="search"] {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* 顶栏 */
+.app-header {
+  height: var(--header-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.app-header .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.app-header .logo img {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.app-header .nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header .user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+/* 主内容区留出顶栏 */
+.main-wrap {
+  padding-top: var(--header-height);
+  min-height: 100vh;
+}
+
+/* 树节点 */
+.tree-node {
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tree-node:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.tree-node.active {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--color-primary);
+}
+
+.tree-node .icon {
+  width: 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.tree-children {
+  padding-left: 20px;
+}

@@ -1,0 +1,27 @@
+---
+description: 每周开发 Todo 必须包含 ones UI 保真与验收验证（硬性必达）
+globs: docs/*开发Todo*.md
+alwaysApply: true
+---
+
+## 工作流硬规则（写在每周 Todo 中）
+
+每次你更新 `docs/*开发Todo*.md`（例如第 1 周、第 2 周、第 3 周）时，必须同时满足：
+
+1. 在本周任务开头（通常在“本周里程碑”之后）加入：
+   - `## 本周 UI 保真验收清单（开发前置，ones，硬性必达）`
+   - 内容是“本周必须实现/必须对齐”的 UI 点清单（可以基于 `web-prototype/*.html` 中的 class/DOM 结构提取）。
+   - 该段落不作为最终手测结果（开发前置用途）。
+
+2. 在本周任务中后段（通常在 Day 最后、或 `---` 分隔线之前）加入：
+   - `## 本周 UI 验收验证（开发完成后手测，ones，硬性必达）`
+   - 列出与“UI 保真验收清单”同一批 UI 点，并使用 `- [ ]` 逐条勾选。
+   - 只有当你已手测完成，才允许把对应项从 `- [ ]` 改为 `- [x]`。
+
+3. UI 点必须具备可验收性：
+   - 必须能通过“DOM/class 是否存在/是否匹配原型结构”或“布局对齐是否符合原型”来判断。
+   - 禁止只有“感觉像/大概差不多”这种不可验收表述。
+
+4. 一致性与工程化约束联动：
+   - 若某 UI 点要求使用原型 class（例如 `sidebar/content-area/rightbar/content-toolbar/readView/editView/tree-node/rightbar-section/toc`），则实现时必须真实使用这些 class/容器结构，而不是仅靠行内 style 拼出来。
+

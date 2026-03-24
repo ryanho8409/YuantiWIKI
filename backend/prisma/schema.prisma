@@ -1,0 +1,134 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  displayName  String?
+  email        String?
+  passwordHash String
+  role         String   @default("user") // system_admin | user
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  spaces       Space[]  @relation("UserSpaces")
+  createdPages Page[]   @relation("PageCreatedBy")
+  updatedPages Page[]   @relation("PageUpdatedBy")
+  spacePermissions SpacePermission[]
+
+  pagePermissions PagePermission[] @relation("UserPagePermissions")
+
+  pageVersions PageVersion[] @relation("PageVersionCreatedBy")
+  attachments Attachment[]
+}
+
+model Space {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  sortOrder   Int      @default(0)
+  createdById String?
+  createdBy   User?    @relation("UserSpaces", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  permissions SpacePermission[]
+  pages       Page[]
+  attachments Attachment[]
+
+  @@index([deletedAt])
+  @@index([sortOrder])
+}
+
+model SpacePermission {
+  id          String   @id @default(cuid())
+  spaceId     String
+  space       Space    @relation(fields: [spaceId], references: [id])
+  subjectType String   // 'user' (phase-2 minimal)
+  subjectId   String
+  subjectUser User?    @relation(fields: [subjectId], references: [id])
+  permission  String   // 'read' | 'write' | 'admin'
+  createdAt   DateTime @default(now())
+
+  @@unique([spaceId, subjectType, subjectId])
+  @@index([spaceId])
+  @@index([subjectType, subjectId])
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  spaceId     String
+  space       Space    @relation(fields: [spaceId], references: [id])
+  parentId    String?
+  parent      Page?    @relation("PageTree", fields: [parentId], references: [id])
+  children    Page[]   @relation("PageTree")
+  title       String
+  content     Json?
+  sortOrder   Int      @default(0)
+  createdById String?
+  createdBy   User?    @relation("PageCreatedBy", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?    @relation("PageUpdatedBy", fields: [updatedById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  versions    PageVersion[]
+
+  permissions PagePermission[] @relation("PagePermissions")
+  attachments Attachment[]
+
+  @@index([spaceId, parentId])
+  @@index([spaceId, deletedAt])
+}
+
+model PageVersion {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  content     Json
+  createdById String?
+  createdBy   User?    @relation("PageVersionCreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([pageId, createdAt])
+}
+
+model PagePermission {
+  id          String   @id @default(cuid())
+  pageId      String
+  page        Page     @relation("PagePermissions", fields: [pageId], references: [id], onDelete: Cascade)
+  subjectType String   // 'user' (phase-5 minimal)
+  subjectId   String
+  subjectUser User?    @relation("UserPagePermissions", fields: [subjectId], references: [id])
+  permission  String   // 'read' | 'write'
+  createdAt   DateTime @default(now())
+
+  @@unique([pageId, subjectType, subjectId])
+  @@index([pageId])
+}
+
+model Attachment {
+  id           String   @id @default(cuid())
+  spaceId      String
+  space        Space    @relation(fields: [spaceId], references: [id])
+  pageId       String?
+  page         Page?    @relation(fields: [pageId], references: [id], onDelete: SetNull)
+  fileName     String
+  filePath     String
+  fileSize     BigInt
+  mimeType     String
+  uploadedById String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  createdAt    DateTime @default(now())
+
+  @@index([spaceId])
+  @@index([pageId])
+}
+

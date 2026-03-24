@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search - Yuanti Wiki</title>
+  <link rel="stylesheet" href="styles/common.css">
+  <style>
+    .main-wrap { padding-top: calc(52px + 16px); padding: 24px; max-width: 800px; margin: 0 auto; }
+    .search-box-wrap { margin-bottom: 24px; }
+    .search-box-wrap input { padding: 12px 16px; font-size: 16px; }
+    .search-meta { color: #6b7280; font-size: 13px; margin-bottom: 16px; }
+    .search-result { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px; margin-bottom:12px; cursor:pointer; }
+    .search-result h3 { margin:0 0 6px; font-size:16px; }
+    .search-result .path { font-size:12px; color:#6b7280; margin-bottom:6px; }
+    .search-result .excerpt { font-size:13px; color:#111827; line-height:1.5; }
+  </style>
+</head>
+<body>
+    <header class="app-header">
+      <a href="index.html" class="logo">
+        <img src="logo.jpg" alt="Yuanti Wiki">
+        <span>Yuanti Wiki</span>
+      </a>
+      <div class="nav"><span class="user">demo</span></div>
+    </header>
+    <main class="main-wrap" style="padding-top: calc(52px + 16px);">
+      <div class="search-box-wrap">
+        <input type="search" placeholder="Search docs..." value="requirement">
+      </div>
+      <p class="search-meta">3 results found</p>
+      <a href="space.html" style="text-decoration:none;color:inherit;">
+        <div class="search-result">
+          <h3>Product requirement doc guideline</h3>
+          <p class="path">Product docs / Guideline</p>
+          <p class="excerpt">This guideline describes how to write a good requirement doc (PRD).</p>
+        </div>
+      </a>
+      <a href="space.html" style="text-decoration:none;color:inherit;">
+        <div class="search-result">
+          <h3>PRD template</h3>
+          <p class="path">Product docs / Template</p>
+          <p class="excerpt">Use this template to write product requirement docs with background, user stories and acceptance criteria.</p>
+        </div>
+      </a>
+      <a href="space.html" style="text-decoration:none;color:inherit;">
+        <div class="search-result">
+          <h3>Requirement review process</h3>
+          <p class="path">Tech guidelines / Processes</p>
+          <p class="excerpt">All requirement docs must be reviewed by product, dev and QA before development.</p>
+        </div>
+      </a>
+    </main>
+  </body>
+</html>

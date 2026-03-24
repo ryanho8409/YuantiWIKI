@@ -1,0 +1,21 @@
+---
+description: 对标 ones 的 API 错误契约（便于统一前端体验）
+globs: backend/src/**/* 
+alwaysApply: true
+---
+
+# 错误契约（后端 -> 前端）
+
+- 所有受保护资源接口：
+  - 未认证：返回 `401`，JSON 至少包含 `{ code: 'UNAUTHORIZED', message: string }`
+  - 无权限：返回 `403`，JSON 至少包含 `{ code: 'FORBIDDEN', message: string }`
+  - 资源不存在：返回 `404`，JSON 至少包含 `{ code: 'NOT_FOUND', message: string }`
+- 页面删除等“业务冲突”：
+  - 当存在子节点/无法删除时，返回 `409`，并在 JSON 中提供稳定 `code`（例如 `HAS_CHILDREN`）
+- 错误字段命名必须稳定：
+  - `code` 用于前端分流（例如映射到文案）
+  - `message` 用于兜底展示（尽量简洁）
+
+# 为什么要写这些
+
+- 这样前端才能做到“同一种错误 -> 同一种 UI 反馈”，从而更接近对标 ones 的整体体验。
