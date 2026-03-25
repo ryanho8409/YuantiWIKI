@@ -1,0 +1,10 @@
+{
+  "version": "v1.1",
+  "scope": "api",
+  "results": {
+    "A": "Pass",
+    "B": "Pass",
+    "C": "Pass",
+    "D": "Pass"
+  }
+}
