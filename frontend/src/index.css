@@ -1094,6 +1094,16 @@ button.header-menu-item:hover:not(:disabled) {
   background: var(--color-row-hover);
 }
 
+.sidebar-import-stub-msg {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  background: var(--color-row-hover);
+  border-radius: 8px;
+}
+
 .sidebar-create-actions {
   margin-top: 10px;
   display: flex;

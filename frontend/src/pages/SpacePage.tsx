@@ -579,6 +579,7 @@ export function SpacePage() {
   const [rightbarOpen, setRightbarOpen] = useState(readRightbarOpen);
   const [spaceExpanded, setSpaceExpanded] = useState(false);
   const [createPagePopover, setCreatePagePopover] = useState<{ parentId: string | null; x: number; y: number } | null>(null);
+  const [importStubVisible, setImportStubVisible] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState('');
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
   const [collapsedTocIndexes, setCollapsedTocIndexes] = useState<Set<number>>(new Set());
@@ -607,6 +608,10 @@ export function SpacePage() {
       document.removeEventListener('mousedown', onDoc);
       document.removeEventListener('keydown', onKey);
     };
+  }, [createPagePopover]);
+
+  useEffect(() => {
+    setImportStubVisible(false);
   }, [createPagePopover]);
 
   const emptyTiptapDoc = {
@@ -1736,11 +1741,16 @@ export function SpacePage() {
             type="button"
             className="sidebar-create-import"
             title="导入功能暂未开放"
-            onClick={() => setStatusText('导入功能入口已预留，暂未开放')}
+            onClick={() => setImportStubVisible(true)}
           >
             导入为 Wiki 页面
             <IconChevronRight />
           </button>
+          {importStubVisible ? (
+            <p className="sidebar-import-stub-msg" role="status">
+              导入功能暂未开放，敬请期待。
+            </p>
+          ) : null}
           <div className="sidebar-create-actions">
             <button
               type="button"
