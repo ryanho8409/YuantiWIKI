@@ -2,15 +2,18 @@
 
 对标 **ONES Wiki**，面向「文档编辑 + 知识沉淀」的企业内网知识库系统。技术栈：React + Node + PostgreSQL，前后端分离，权限由管理员分配。
 
-## 当前开发进度（截至第 9 周 / Release V1.0）
+## 当前开发进度（Release V1.1，2026-03-25）
+
+> V1.0 基线见第九周结项；V1.1 在账号资料、服务端头像、深色模式与 Dashboard 欢迎区头像等方面增量交付，详见 [21-Release-V1.1-说明](./21-Release-V1.1-说明.md)。
 
 - **后端（backend/）**
   - Fastify + TypeScript，Prisma 7 + PostgreSQL（含 driver adapter、`prisma.config.ts`）。
   - 数据表：`users`、`spaces`、`space_permissions`、`pages`、`page_versions`（已迁移并 seed）；`page_permissions`（第五周）；`attachments`（第六周：multipart 上传与按 id 读文件）。
   - 认证：JWT Bearer，`src/lib/auth.ts` 生成/校验 token，`src/plugins/auth.ts` 解析并挂载 `req.user`。
+  - 用户资料与头像（V1.1）：`User` 含 `lastLoginAt`、`avatarPath`（服务端文件）；`PATCH /api/v1/auth/profile`；`POST/DELETE /api/v1/auth/avatar`；`GET /api/v1/users/:userId/avatar/file`。
   - 接口：
     - `GET /api/health`
-    - Auth：`POST /api/v1/auth/login`、`GET /api/v1/auth/me`、`POST /api/v1/auth/logout`
+    - Auth：`POST /api/v1/auth/login`、`GET /api/v1/auth/me`、`POST /api/v1/auth/logout`、`PATCH /api/v1/auth/profile`、头像上传/删除（见上）
     - Spaces：`GET /api/v1/spaces`、`GET /api/v1/spaces/:id`、`POST /api/v1/spaces`、`PATCH /api/v1/spaces/:id`、`DELETE /api/v1/spaces/:id`
     - Space permissions：`GET /api/v1/spaces/:id/permissions`、`PUT /api/v1/spaces/:id/permissions`
     - Search：`GET /api/v1/search?q=...`（第四周）
@@ -22,8 +25,9 @@
 - **前端（frontend/）**
   - Vite + React 18 + TypeScript，React Router、TanStack React Query。
   - 路由：`/login`（登录页）、`/`（需登录的首页）；AuthProvider 启动时调 `/auth/me` 恢复状态，PrivateRoute 未登录跳转 `/login`。
-  - 登录页对接 `POST /api/v1/auth/login`，token 存 localStorage，成功后跳转首页；顶栏显示当前用户与 Sign out。
-  - 首页已接入真实仪表盘数据：调用 `GET /api/v1/dashboard` 获取统计与最近文档，知识库卡片调用 `GET /api/v1/spaces`，点击跳转 `/space/:spaceId`。
+  - 登录页对接 `POST /api/v1/auth/login`，token 存 localStorage，成功后跳转首页；顶栏显示当前用户头像（可自定义）与 Sign out。
+  - 首页已接入真实仪表盘数据：调用 `GET /api/v1/dashboard` 获取统计与最近文档，知识库卡片调用 `GET /api/v1/spaces`，点击跳转 `/space/:spaceId`；欢迎区展示头像与问候语（V1.1）。
+  - `/settings`：个人资料、头像上传、显示设置（含深色模式）（V1.1）。
   - 搜索入口：`/search` 页面 + 顶栏搜索输入（Enter 跳转并渲染结果）（第四周）
   - SpacePage：`Page settings` 弹窗与页面级权限驱动（第五周）；编辑态「Insert image」+ TipTap `Image` 扩展（第六周）
 - **运行方式**
@@ -58,6 +62,9 @@
 | [15-第八周结项快照](./15-第八周结项快照.md) | 第 8 周结项摘要：完成范围、质量结果、遗留与下周建议 |
 | [16-第九周方向草案](./16-第九周方向草案.md) | 第 9 周方向冻结文档：体验升级与结构收敛（P0 范围） |
 | [17-第九周开发Todo](./17-第九周开发Todo.md) | 第 9 周开发执行清单：Day 1～Day 7 + 测试入口 |
+| [19-深色模式后续迭代备忘](./19-深色模式后续迭代备忘.md) | 深色主题已交付后的 5 条候选增强（跟随系统、服务端同步、可读性、图片观感、减少动效）；**未排期** |
+| [20-第十周开发方向草案](./20-第十周开发方向草案.md) | 第十周方向草案；含本日已落地说明（深色模式、设置、账号资料、迁移）与后续候选 |
+| [21-Release-V1.1-说明](./21-Release-V1.1-说明.md) | **Release V1.1**：升级迁移清单、功能摘要、GitHub Release 文案建议 |
 | [产品迭代计划](./产品迭代计划.md) | 按迭代记录功能/体验/性能等优化；**迭代 #1** = 第 7 周 |
 | [05-保真原型Todo清单](./05-保真原型Todo清单.md) | 阶段 0 保真原型的详细 Todo（0.1–0.28） |
 | [06-第一周开发Todo](./06-第一周开发Todo.md) | 第 1 周开发任务列表（后端 + 登录 + 首页闭环），已完成项已勾选 |
@@ -97,3 +104,6 @@
 - 2026-03-23：第 9 周开工前定版：已把实施决议（Logo/菜单分组/权限兼容/图标与优先级）固化到 `16/17/产品迭代计划`，并同步 `tests/README.md` 的周测试资产索引。
 - 2026-03-24：第 9 周结项：完成品牌化（Logo+标题+favicon）、齿轮菜单分组、Space 右栏收起、编辑器图标化、阅读态信息区与操作收敛、权限模型收敛与初始化数据单空间；build 与 week7 回归通过，week9 测试计划已回填。
 - 2026-03-24：Release V1.0 收口：Dashboard 改为真实数据链路（`/api/v1/dashboard`），首页去除重复“搜索文档”按钮并保留顶栏搜索；知识库卡片统一系统文件夹图标并忽略 `space.icon`；新增并执行历史图标字段清理脚本。
+- 2026-03-25：新增 `docs/19-深色模式后续迭代备忘.md`，记录深色模式 5 条后续候选需求（暂不开发）。
+- 2026-03-25：新增 `docs/20-第十周开发方向草案.md`（本日已交付内容 + 第十周候选方向）；账号信息两期与资料 API 已落地。
+- 2026-03-25：**Release V1.1** 定版：服务端头像与 `avatarPath` 迁移、Dashboard 欢迎区头像、`avatarRevision` 全局刷新顶栏/首页/设置预览；新增 `docs/21-Release-V1.1-说明.md`；根目录 `README` 与本文索引更新为 V1.1。

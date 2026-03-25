@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Layout } from '../components/Layout';
+import { userAvatarSrc } from '../lib/avatarUrl';
 
 interface Space {
   id: string;
@@ -94,7 +95,7 @@ function formatRelativeTime(value?: string): string {
 }
 
 export function HomePage() {
-  const { user, token } = useAuth();
+  const { user, token, avatarRevision } = useAuth();
   const navigate = useNavigate();
   const [spaceExpanded, setSpaceExpanded] = useState(false);
 
@@ -135,12 +136,33 @@ export function HomePage() {
   const recentUpdatedItems = (dashboardQuery.data?.recentUpdated ?? []).slice(0, DASHBOARD_RECENT_LIMIT);
   const recentCreatedItems = (dashboardQuery.data?.recentCreated ?? []).slice(0, DASHBOARD_RECENT_LIMIT);
 
+  const dashboardAvatarSrc = useMemo(() => {
+    if (!user || !token) return null;
+    return userAvatarSrc(
+      user.id,
+      Boolean(user.hasCustomAvatar),
+      token,
+      avatarRevision,
+    );
+  }, [user, token, avatarRevision]);
+
   return (
     <Layout>
       <div className="dash-header">
-        <div>
-          <h1 className="dash-title">欢迎回来，{user?.username ?? ''}</h1>
-          <p className="dash-sub">快速查看知识库与文档动态。</p>
+        <div className="dash-header-greet">
+          {dashboardAvatarSrc ? (
+            <img
+              src={dashboardAvatarSrc}
+              alt=""
+              className="dash-header-avatar"
+              width={56}
+              height={56}
+            />
+          ) : null}
+          <div className="dash-header-text">
+            <h1 className="dash-title">欢迎回来，{user?.username ?? ''}</h1>
+            <p className="dash-sub">快速查看知识库与文档动态。</p>
+          </div>
         </div>
       </div>
 

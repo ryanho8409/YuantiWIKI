@@ -1,7 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState, type SVGProps } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { userAvatarSrc } from '../lib/avatarUrl';
 import { Copy } from '../constants/copy';
+import { ChangePasswordModal } from './ChangePasswordModal';
 
 /** Lucide 风格：Settings（齿轮） */
 function IconSettings(props: SVGProps<SVGSVGElement>) {
@@ -25,7 +27,8 @@ function IconSettings(props: SVGProps<SVGSVGElement>) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth();
+  const { user, token, logout, avatarRevision } = useAuth();
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef<HTMLDetailsElement>(null);
@@ -55,6 +58,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const isSystemAdmin = user?.role === 'system_admin';
+
+  const headerAvatarSrc = useMemo(() => {
+    if (!user || !token) return null;
+    return userAvatarSrc(
+      user.id,
+      Boolean(user.hasCustomAvatar),
+      token,
+      avatarRevision,
+    );
+  }, [user, token, avatarRevision]);
 
   return (
     <>
@@ -106,20 +119,43 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </>
               )}
               <div className="header-menu-group-label">设置</div>
-              <button type="button" className="header-menu-item" role="menuitem" disabled>
-                账号信息
-              </button>
-              <button type="button" className="header-menu-item" role="menuitem" disabled>
-                显示模式
-              </button>
-              <button type="button" className="header-menu-item" role="menuitem" disabled>
+              <Link
+                to="/settings"
+                className="header-menu-item"
+                role="menuitem"
+                onClick={() => {
+                  if (menuRef.current) menuRef.current.open = false;
+                }}
+              >
+                个人设置
+              </Link>
+              <button
+                type="button"
+                className="header-menu-item"
+                role="menuitem"
+                onClick={() => {
+                  setChangePasswordOpen(true);
+                  if (menuRef.current) menuRef.current.open = false;
+                }}
+              >
                 修改密码
               </button>
             </div>
           </details>
-          <span className="user">
-            {user?.username ?? ''}
-            {isSystemAdmin ? Copy.layout.systemAdminSuffix : ''}
+          <span className="user user-with-avatar">
+            {headerAvatarSrc ? (
+              <img
+                src={headerAvatarSrc}
+                alt=""
+                className="header-user-avatar"
+                width={28}
+                height={28}
+              />
+            ) : null}
+            <span className="user-name-text">
+              {user?.username ?? ''}
+              {isSystemAdmin ? Copy.layout.systemAdminSuffix : ''}
+            </span>
           </span>
           <button type="button" className="btn btn-ghost" onClick={logout}>
             {Copy.common.signOut}
@@ -127,6 +163,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="main-wrap">{children}</main>
+      <ChangePasswordModal
+        open={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+        token={token}
+      />
     </>
   );
 }

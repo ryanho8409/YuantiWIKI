@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "cleanup:demo:dryrun": "ts-node prisma/cleanup-demo-data.ts",
     "cleanup:demo": "ts-node prisma/cleanup-demo-data.ts --apply",
     "cleanup:space-icons:dryrun": "ts-node prisma/cleanup-space-icons.ts",
-    "cleanup:space-icons": "ts-node prisma/cleanup-space-icons.ts --apply"
+    "cleanup:space-icons": "ts-node prisma/cleanup-space-icons.ts --apply",
+    "admin:reset-password": "ts-node prisma/reset-admin-password.ts"
   },
   "keywords": [],
   "author": "",

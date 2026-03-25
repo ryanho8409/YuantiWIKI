@@ -23,6 +23,8 @@ type PermissionRow = {
   permission: PermissionValue;
 };
 
+type SavePermissionsPayload = { spaceId: string; rows: PermissionRow[] };
+
 function normalizePermissionRows(rows: PermissionRow[]): PermissionRow[] {
   return [...rows].sort((a, b) => a.userId.localeCompare(b.userId));
 }
@@ -35,6 +37,28 @@ function isSamePermissionRows(a: PermissionRow[], b: PermissionRow[]): boolean {
     if (left[i].userId !== right[i].userId || left[i].permission !== right[i].permission) return false;
   }
   return true;
+}
+
+/**
+ * 后端要求：每个 system_admin 必须出现在 permissions[] 中且为 admin，否则 PUT 返回 409 且不写入。
+ * 展示与保存前合并，避免「只加普通成员」时保存失败、刷新后仍为空。
+ */
+function mergeSystemAdminRows(
+  rows: PermissionRow[],
+  users: User[] | undefined
+): PermissionRow[] {
+  const admins = (users ?? []).filter((u) => u.role === 'system_admin');
+  if (admins.length === 0) return rows;
+  const map = new Map(rows.map((r) => [r.userId, { ...r }]));
+  for (const u of admins) {
+    const cur = map.get(u.id);
+    if (!cur) {
+      map.set(u.id, { userId: u.id, permission: 'admin' });
+    } else if (cur.permission !== 'admin') {
+      map.set(u.id, { userId: u.id, permission: 'admin' });
+    }
+  }
+  return Array.from(map.values());
 }
 
 async function fetchSpaces(token: string | null): Promise<Space[]> {
@@ -175,21 +199,30 @@ export function AdminSpacesPage() {
   });
 
   const [pendingRows, setPendingRows] = useState<PermissionRow[]>([]);
+  /** 最近一次成功保存权限后，在无未保存变更时显示「已保存」灰态 */
+  const [permissionSavedAck, setPermissionSavedAck] = useState(false);
 
-  const effectiveRows = useMemo(
+  const rawEffectiveRows = useMemo(
     () => (pendingRows.length > 0 ? pendingRows : permissionsQuery.data ?? []),
     [pendingRows, permissionsQuery.data]
   );
 
+  const effectiveRows = useMemo(
+    () => mergeSystemAdminRows(rawEffectiveRows, usersQuery.data),
+    [rawEffectiveRows, usersQuery.data]
+  );
+
   const saveMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedSpaceId) throw new Error('请先选择知识库');
-      await updateSpacePermissions(token, selectedSpaceId, effectiveRows);
+    mutationFn: async ({ spaceId, rows }: SavePermissionsPayload) => {
+      if (!spaceId) throw new Error('请先选择知识库');
+      await updateSpacePermissions(token, spaceId, rows);
     },
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
+      const { spaceId, rows } = variables;
       setPendingRows([]);
-      setStatusText('知识库权限已保存');
-      await queryClient.invalidateQueries({ queryKey: ['space-permissions', selectedSpaceId] });
+      setPermissionSavedAck(true);
+      queryClient.setQueryData<PermissionRow[]>(['space-permissions', spaceId], rows);
+      await queryClient.invalidateQueries({ queryKey: ['space-permissions', spaceId] });
     },
     onError: (err) => setStatusText((err as Error)?.message || '保存知识库权限失败'),
   });
@@ -288,6 +321,12 @@ export function AdminSpacesPage() {
     const source = permissionsQuery.data ?? [];
     return !isSamePermissionRows(effectiveRows, source);
   }, [effectiveRows, permissionsQuery.data]);
+
+  useEffect(() => {
+    if (hasPermissionChanges) {
+      setPermissionSavedAck(false);
+    }
+  }, [hasPermissionChanges]);
   const canConfirmDelete =
     !!selectedSpace && deleteConfirmText.trim() === selectedSpace.name;
 
@@ -348,6 +387,7 @@ export function AdminSpacesPage() {
                 onChange={(e) => {
                   setSelectedSpaceId(e.target.value);
                   setPendingRows([]);
+                  setPermissionSavedAck(false);
                   setIsEditingMeta(false);
                   setDeleteConfirmOpen(false);
                   setDeleteConfirmText('');
@@ -575,11 +615,22 @@ export function AdminSpacesPage() {
                     <div className="kb-meta-actions">
                       <button
                         type="button"
-                        className={`btn ${hasPermissionChanges ? 'btn-primary' : 'btn-secondary'}`}
-                        onClick={() => saveMutation.mutate()}
+                        className={`btn ${hasPermissionChanges ? 'btn-primary' : 'btn-secondary'}${!hasPermissionChanges && permissionSavedAck ? ' kb-perm-saved' : ''}`}
+                        onClick={() =>
+                          saveMutation.mutate({
+                            spaceId: selectedSpaceId,
+                            rows: effectiveRows,
+                          })
+                        }
                         disabled={!hasPermissionChanges || saveMutation.isPending}
                       >
-                        {saveMutation.isPending ? '保存中...' : hasPermissionChanges ? '保存权限' : '无需保存'}
+                        {saveMutation.isPending
+                          ? '保存中...'
+                          : hasPermissionChanges
+                            ? '保存权限'
+                            : permissionSavedAck
+                              ? '已保存'
+                              : '无需保存'}
                       </button>
                     </div>
                   </>

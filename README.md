@@ -1,8 +1,8 @@
-# 元体WIKI（YuantiWIKI）- Release V1.0
+# 元体WIKI（YuantiWIKI）- Release V1.1
 
 一个面向企业内网场景的知识库系统，支持：
 
-- 用户登录与权限控制（`system_admin` / `user`）
+- 用户登录与权限控制（`system_admin` / `user`）；普通用户可修改密码，管理员可重置普通用户密码；个人设置（显示名、邮箱、**服务端头像**、深色模式）
 - 知识库（Space）与页面树管理
 - 富文本编辑（TipTap）与历史版本
 - 空间级权限管理
@@ -98,9 +98,11 @@ npm run dev
 
 ---
 
-## 5. 生产部署（Release V1.0）
+## 5. 生产部署（Release V1.1）
 
 以下为推荐的基础部署流程（无容器版本）。
+
+**从 V1.0 升级**：必须先执行 `npx prisma migrate deploy` 应用新迁移（含用户资料与 `avatarPath`），否则登录态恢复可能失败。详见 `docs/21-Release-V1.1-说明.md`。
 
 ### 5.1 拉取代码并安装依赖
 
@@ -173,6 +175,31 @@ npm run cleanup:space-icons          # 再执行
 
 > 建议上线后第一时间修改默认密码，或通过运维流程重置为强密码。
 
+### 7.1 系统管理员忘记密码（线下恢复）
+
+应用**不提供**「找回 system_admin 密码」的 HTTP 接口。若唯一或全部 system_admin 无法登录，可在**能直连数据库的受信环境**（通常为服务器 SSH）执行线下脚本，交互输入新密码并写回数据库（bcrypt）。
+
+**前置条件**
+
+- `backend/.env` 中已配置可连生产库的 `DATABASE_URL`（或在同一 shell 中导出该变量）。
+- 在 `backend` 目录已执行 `npm install`，且能运行 `ts-node`。
+
+**用法**
+
+```bash
+cd backend
+npm run admin:reset-password
+# 或指定用户名（当存在多个 system_admin 时必填）
+npm run admin:reset-password -- --username admin
+```
+
+等效命令：`npx ts-node prisma/reset-admin-password.ts`（可选参数同上）。
+
+**安全与审计**
+
+- 仅在运维可控环境执行；操作会修改数据库中的 `passwordHash`，建议在变更记录中注明时间与操作者。
+- 终端输入密码为可见回显（脚本内已说明）；完成后请尽快登录并在界面中改为强密码。
+
 ---
 
 ## 8. 常见问题
@@ -180,6 +207,7 @@ npm run cleanup:space-icons          # 再执行
 - **端口占用（3000/5173）**：修改服务端口或结束占用进程。
 - **登录 401**：检查 `JWT_SECRET`、用户密码、前后端地址是否一致。
 - **数据库迁移失败**：确认 `DATABASE_URL` 可连通且账号具备迁移权限。
+- **升级后无法登录 / `/auth/me` 报错**：多为未执行 V1.1 迁移（`avatarPath` 等字段缺失）；在 `backend` 执行 `npx prisma migrate deploy` 并重启后端。
 - **前端无数据**：确认后端已启动，且前端 `/api` 代理指向正确。
 
 ---
@@ -187,6 +215,7 @@ npm run cleanup:space-icons          # 再执行
 ## 9. 相关文档
 
 - 项目文档索引：`docs/README.md`
+- Release V1.1：`docs/21-Release-V1.1-说明.md`（升级说明、迁移清单、GitHub Release 摘要）
 - 第九周方向：`docs/16-第九周方向草案.md`
 - 第九周执行：`docs/17-第九周开发Todo.md`
 - 迭代计划：`docs/产品迭代计划.md`
@@ -194,7 +223,7 @@ npm run cleanup:space-icons          # 再执行
 
 ---
 
-## 10. 一键发布命令清单（Release V1.0）
+## 10. 一键发布命令清单（Release V1.1）
 
 > 适用于 Linux/macOS Bash。执行前请先确认 `backend/.env` 已配置完成。
 
@@ -237,7 +266,7 @@ npm run build
 # npm run preview
 cd ..
 
-echo "== Done: Release V1.0 build completed =="
+echo "== Done: Release V1.1 build completed =="
 ```
 
 ### 10.1 PM2 启动示例（可选）

@@ -27,13 +27,20 @@ export async function registerAdminRoutes(app: FastifyInstance) {
         username: true,
         displayName: true,
         email: true,
+        avatarPath: true,
         role: true,
         createdAt: true,
         updatedAt: true,
+        lastLoginAt: true,
       },
     });
 
-    return { list: users, total: users.length };
+    const list = users.map(({ avatarPath, ...rest }) => ({
+      ...rest,
+      hasCustomAvatar: Boolean(avatarPath),
+    }));
+
+    return { list, total: list.length };
   });
 
   app.post<{
@@ -94,6 +101,50 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     return reply.status(201).send(created);
   });
 
+  /** 管理员重置普通用户密码（忘记密码场景） */
+  app.post<{
+    Params: { id: string };
+    Body: { password?: string };
+  }>('/admin/users/:id/reset-password', async (request, reply) => {
+    if (!requireSystemAdmin(request, reply)) return;
+
+    const userId = request.params.id;
+    const password = request.body?.password ?? '';
+    if (!password) {
+      return reply.status(400).send({
+        code: 'BAD_REQUEST',
+        message: '新密码为必填项',
+      });
+    }
+    if (password.length < 6) {
+      return reply.status(400).send({
+        code: 'BAD_REQUEST',
+        message: '密码长度至少 6 位',
+      });
+    }
+
+    const exists = await app.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, role: true },
+    });
+    if (!exists) {
+      return reply.status(404).send({ code: 'NOT_FOUND', message: '用户不存在' });
+    }
+    if (exists.role === 'system_admin') {
+      return reply.status(403).send({
+        code: 'FORBIDDEN',
+        message: '不可重置系统管理员密码',
+      });
+    }
+
+    await app.prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash: await hash(password, 10) },
+    });
+
+    return reply.status(204).send();
+  });
+
   app.patch<{
     Params: { id: string };
     Body: {
@@ -116,7 +167,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     if (exists.role === 'system_admin') {
       return reply.status(403).send({
         code: 'FORBIDDEN',
-        message: 'system_admin 用户不可删除',
+        message: '不可修改系统管理员',
       });
     }
 

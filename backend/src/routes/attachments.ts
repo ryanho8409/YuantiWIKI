@@ -5,12 +5,7 @@ import path from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import { satisfiesSpacePermission, type SpacePermissionLevel } from '../lib/permissions';
 import { verifyToken, type JwtPayload } from '../lib/auth';
-
-function uploadRoot() {
-  return process.env.UPLOAD_DIR
-    ? path.resolve(process.env.UPLOAD_DIR)
-    : path.join(process.cwd(), 'uploads');
-}
+import { uploadRoot } from '../lib/uploadRoot';
 
 async function requireSpacePermission(
   app: FastifyInstance,

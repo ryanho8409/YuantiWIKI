@@ -11,11 +11,14 @@ model User {
   id           String   @id @default(cuid())
   username     String   @unique
   displayName  String?
-  email        String?
+  email        String?  @unique
+  /** 相对 UPLOAD_DIR 的路径，如 avatars/xxx.jpg；由服务端写入，非外链 URL */
+  avatarPath   String?
   passwordHash String
   role         String   @default("user") // system_admin | user
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  lastLoginAt  DateTime?
   spaces       Space[]  @relation("UserSpaces")
   createdPages Page[]   @relation("PageCreatedBy")
   updatedPages Page[]   @relation("PageUpdatedBy")

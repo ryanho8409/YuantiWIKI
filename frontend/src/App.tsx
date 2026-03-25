@@ -7,6 +7,7 @@ import { SearchPage } from './pages/SearchPage';
 import { ForbiddenPage } from './pages/ForbiddenPage';
 import { AdminUsersPage } from './pages/AdminUsersPage';
 import { AdminSpacesPage } from './pages/AdminSpacesPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 function App() {
   return (
@@ -41,6 +42,14 @@ function App() {
         element={
           <PrivateRoute>
             <SearchPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <SettingsPage />
           </PrivateRoute>
         }
       />
