@@ -10,7 +10,7 @@ test.describe('Week 1 E2E (auth + space list)', () => {
     await page.goto('/login');
     await expect(page.locator('.login-page')).toBeVisible();
     await expect(page.locator('.login-card')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Sign in' })).toHaveClass(/btn-primary/);
+    await expect(page.getByRole('button', { name: '登录' })).toHaveClass(/btn-primary/);
   });
 
   test('M-03~M-05: admin 登录成功后顶栏与首页卡片', async ({ page }) => {
@@ -19,12 +19,12 @@ test.describe('Week 1 E2E (auth + space list)', () => {
     const inputs = page.locator('form input');
     await inputs.nth(0).fill('admin');
     await inputs.nth(1).fill('admin123');
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('button', { name: '登录' }).click();
 
     await expect(page).toHaveURL('/');
 
     await expect(page.locator('.app-header')).toBeVisible();
-    await expect(page.locator('.logo')).toContainText('Yuanti Wiki');
+    await expect(page.locator('.logo')).toContainText('元体WIKI');
     await expect(page.locator('.nav .user')).toContainText('admin');
 
     await expect(page.locator('.space-grid')).toBeVisible();
@@ -38,11 +38,11 @@ test.describe('Week 1 E2E (auth + space list)', () => {
     const inputs = page.locator('form input');
     await inputs.nth(0).fill('admin');
     await inputs.nth(1).fill('__wrong_password__');
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByRole('button', { name: '登录' }).click();
 
     await expect(page).toHaveURL(/\/login/);
     await expect(page.locator('.error-text')).toBeVisible();
-    await expect(page.locator('.error-text')).toContainText('Invalid username or password');
+    await expect(page.locator('.error-text')).toContainText('用户名或密码错误');
   });
 });
 

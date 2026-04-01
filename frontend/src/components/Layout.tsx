@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo, useRef, useState, type SVGProps } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { userAvatarSrc } from '../lib/avatarUrl';
 import { Copy } from '../constants/copy';
 import { ChangePasswordModal } from './ChangePasswordModal';
@@ -28,6 +29,7 @@ function IconSettings(props: SVGProps<SVGSVGElement>) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { user, token, logout, avatarRevision } = useAuth();
+  const { mode } = useTheme();
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,7 +75,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <>
       <header className="app-header">
         <Link to="/" className="logo">
-          <img src="/logo1.png" alt="" className="brand-logo brand-logo--header" />
+          <img
+            src={`${import.meta.env.BASE_URL}${mode === 'dark' ? 'logo_dark.png' : 'logo1.png'}`}
+            alt=""
+            className="brand-logo brand-logo--header"
+          />
           元体WIKI
         </Link>
         <div className="nav">
